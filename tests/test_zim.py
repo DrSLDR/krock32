@@ -55,3 +55,16 @@ class TestEncoder:
             31: '9'
         }
         assert ec._alphabet == alphabet
+
+    def test_simple_encodings(self):
+        for bts, encoding in [(0x27, 'rh====')]:
+            ec = Z.Encoder()
+            ec.update(bts)
+            assert ec.finalize() == encoding
+
+    def test_update_after_final(self):
+        ec = Z.Encoder()
+        ec.update(0)
+        ec.finalize()
+        with pytest.raises(Exception):
+            ec.update(0)
