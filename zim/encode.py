@@ -11,7 +11,7 @@ z-base-32 string.
 class Encoder():
     def __init__(self):
         self._string = ''
-        self._byte_buffer = bytes(0)
+        self._byte_buffer = bytearray()
         self._alphabet = self._make_alphabet(
             'ybndrfg8ejkmcpqxot1uwisza345h769'
         )
