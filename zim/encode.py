@@ -44,6 +44,8 @@ class Encoder():
             self._string += self._render_quantum(quantum)
 
     def update(self, data: bytes):
+        if self._is_finished:
+            raise EncoderAlreadyFinalizedException
         self._byte_buffer.extend(bytearray(data))
         self._consume()
 
