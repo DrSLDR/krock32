@@ -66,5 +66,5 @@ class TestEncoder:
         ec = Z.Encoder()
         ec.update(0)
         ec.finalize()
-        with pytest.raises(Exception):
+        with pytest.raises(Z.EncoderAlreadyFinalizedException):
             ec.update(0)

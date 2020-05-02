@@ -8,4 +8,4 @@ and pretty printing
 """
 
 # pylama:ignore=W0611
-from zim.encode import Encoder
+from zim.encode import Encoder, EncoderAlreadyFinalizedException

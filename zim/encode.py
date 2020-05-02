@@ -7,6 +7,9 @@ Class definition for the zim encoder, taking bytes-data and turning it into
 z-base-32 string.
 """
 
+class EncoderAlreadyFinalizedException(Exception):
+    pass
+
 
 class Encoder():
     def __init__(self):
