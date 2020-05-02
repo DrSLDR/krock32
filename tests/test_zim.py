@@ -72,7 +72,7 @@ class TestEncoder:
 
     def test_update_after_final(self):
         ec = Z.Encoder()
-        ec.update(0)
+        ec.update([0])
         ec.finalize()
         with pytest.raises(Z.EncoderAlreadyFinalizedException):
-            ec.update(0)
+            ec.update([0])
