@@ -56,8 +56,16 @@ class TestEncoder:
         }
         assert ec._alphabet == alphabet
 
+    def _get_encoding_set(self):
+        return [
+            ([0x27], 'rh======'),
+            ([0xb7], 'sh======'),
+            ([0xc6], '4a======'),
+            ([0xb7,0xc6], 's9my====')
+        ]
+
     def test_simple_encodings(self):
-        for bts, encoding in [(0x27, 'rh====')]:
+        for bts, encoding in self._get_encoding_set():
             ec = Z.Encoder()
             ec.update(bts)
             assert ec.finalize() == encoding
