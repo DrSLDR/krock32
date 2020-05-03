@@ -96,7 +96,6 @@ class Encoder():
         p_quin = self._render_fifth_quin(quantum[4], p_quin.rem)
         return the_string + p_quin.sym
 
-
     def _consume(self):
         while len(self._byte_buffer) > 5:
             quantum = self._byte_buffer[0:5]

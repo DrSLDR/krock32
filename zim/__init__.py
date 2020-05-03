@@ -1,4 +1,4 @@
-# zim.__init__.py
+# __init__.py
 
 """
 Zim module 0.0.1
