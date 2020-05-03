@@ -93,6 +93,14 @@ class TestEncoder:
             ec.update(bts)
             assert ec.finalize() == encoding
 
+    def test_checksum_encodings(self):
+        for bts, encoding, cs in self._get_encoding_set():
+            ec = K.Encoder(checksum=True)
+            ec.update(bts)
+            ret = ec.finalize()
+            assert ret[:-1] == encoding
+            assert ret[-1] == cs
+
     def test_update_after_final(self):
         ec = K.Encoder()
         ec.update([0])

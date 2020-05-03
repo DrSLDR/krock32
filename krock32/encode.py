@@ -14,13 +14,14 @@ class EncoderAlreadyFinalizedException(Exception):
 
 
 class Encoder():
-    def __init__(self):
+    def __init__(self, checksum: bool = False):
         self._string: str = ''
         self._byte_buffer: bytearray = bytearray()
         self._alphabet: dict = self._make_alphabet(
             '0123456789ABCDEFGHJKMNPQRSTVWXYZ*~$=U'
         )
         self._is_finished: bool = False
+        self._checksum = checksum
         self._p_quin = namedtuple('ProcessedQuin', ['sym', 'rem'])
 
     def _make_alphabet(self, alphabet_string: str) -> dict:
