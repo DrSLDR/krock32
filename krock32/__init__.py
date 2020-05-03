@@ -8,5 +8,5 @@ and pretty printing
 """
 
 # pylama:ignore=W0611
-from krock32.encode import Encoder, EncoderAlreadyFinalizedException
+from krock32.encode import Encoder
 from krock32.decode import Decoder

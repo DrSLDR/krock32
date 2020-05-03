@@ -105,7 +105,7 @@ class TestEncoder:
         ec = K.Encoder()
         ec.update([0])
         ec.finalize()
-        with pytest.raises(K.EncoderAlreadyFinalizedException):
+        with pytest.raises(K.encode.EncoderAlreadyFinalizedException):
             ec.update([0])
 
 
