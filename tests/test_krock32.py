@@ -108,6 +108,13 @@ class TestEncoder:
         with pytest.raises(K.encode.EncoderAlreadyFinalizedException):
             ec.update([0])
 
+    def test_multiple_final(self):
+        ec = K.Encoder()
+        ec.update([0])
+        ec.finalize()
+        with pytest.raises(K.encode.EncoderAlreadyFinalizedException):
+            ec.finalize()
+
 
 class TestDecoder:
     def test_instatiates(self):
