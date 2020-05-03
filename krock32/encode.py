@@ -117,6 +117,8 @@ class Encoder():
         self._consume()
 
     def finalize(self) -> str:
+        if self._is_finished:
+            raise EncoderAlreadyFinalizedException
         self._is_finished = True
         encoding: str = self._string + self._render_quantum(self._byte_buffer)
         if self._do_checksum:
