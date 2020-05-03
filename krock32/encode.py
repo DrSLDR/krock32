@@ -73,25 +73,21 @@ class Encoder():
         the_string += p_quin.sym
         if len(quantum) == 1:
             the_string += self._alphabet.get(p_quin.rem)
-            the_string += '======'
             return the_string
         p_quin = self._render_second_quin(quantum[1], p_quin.rem)
         the_string += p_quin.sym
         if len(quantum) == 2:
             the_string += self._alphabet.get(p_quin.rem)
-            the_string += '===='
             return the_string
         p_quin = self._render_third_quin(quantum[2], p_quin.rem)
         the_string += p_quin.sym
         if len(quantum) == 3:
             the_string += self._alphabet.get(p_quin.rem)
-            the_string += '==='
             return the_string
         p_quin = self._render_fourth_quin(quantum[3], p_quin.rem)
         the_string += p_quin.sym
         if len(quantum) == 4:
             the_string += self._alphabet.get(p_quin.rem)
-            the_string += '=='
             return the_string
         p_quin = self._render_fifth_quin(quantum[4], p_quin.rem)
         return the_string + p_quin.sym
