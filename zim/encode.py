@@ -15,12 +15,12 @@ class EncoderAlreadyFinalizedException(Exception):
 
 class Encoder():
     def __init__(self):
-        self._string = ''
-        self._byte_buffer = bytearray()
-        self._alphabet = self._make_alphabet(
+        self._string: str = ''
+        self._byte_buffer: bytearray = bytearray()
+        self._alphabet: dict = self._make_alphabet(
             'ybndrfg8ejkmcpqxot1uwisza345h769'
         )
-        self._is_finished = False
+        self._is_finished: bool = False
         self._p_quin = namedtuple('ProcessedQuin', ['sym', 'rem'])
 
     def _make_alphabet(self, alphabet_string: str) -> dict:
