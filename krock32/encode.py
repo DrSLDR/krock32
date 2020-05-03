@@ -21,7 +21,8 @@ class Encoder():
             '0123456789ABCDEFGHJKMNPQRSTVWXYZ*~$=U'
         )
         self._is_finished: bool = False
-        self._checksum = checksum
+        self._checksum = 0
+        self._do_checksum: bool = checksum
         self._p_quin = namedtuple('ProcessedQuin', ['sym', 'rem'])
 
     def _make_alphabet(self, alphabet_string: str) -> dict:
@@ -30,13 +31,20 @@ class Encoder():
             alphabet[i] = x
         return alphabet
 
+    def _update_checksum(self, byte: int):
+        if not self._do_checksum:
+            return
+        self._checksum = ((self._checksum << 8) + byte) % 37
+
     def _render_first_quin(self, byte) -> tuple:
+        self._update_checksum(byte)
         quin = byte >> 3
         rem = (byte & 0b111) << 2
         return self._p_quin(sym=self._alphabet.get(quin),
                             rem=rem)
 
     def _render_second_quin(self, byte, remainder) -> tuple:
+        self._update_checksum(byte)
         sym = ''
         quin = (byte >> 6) + remainder
         sym += self._alphabet.get(quin)
@@ -46,12 +54,14 @@ class Encoder():
         return self._p_quin(sym=sym, rem=rem)
 
     def _render_third_quin(self, byte, remainder) -> tuple:
+        self._update_checksum(byte)
         quin = (byte >> 4) + remainder
         rem = (byte & 0b1111) << 1
         return self._p_quin(sym=self._alphabet.get(quin),
                             rem=rem)
 
     def _render_fourth_quin(self, byte, remainder) -> tuple:
+        self._update_checksum(byte)
         sym = ''
         quin = (byte >> 7) + remainder
         sym += self._alphabet.get(quin)
@@ -61,6 +71,7 @@ class Encoder():
         return self._p_quin(sym=sym, rem=rem)
 
     def _render_fifth_quin(self, byte, remainder) -> tuple:
+        self._update_checksum(byte)
         sym = ''
         quin = (byte >> 5) + remainder
         sym += self._alphabet.get(quin)
@@ -107,4 +118,7 @@ class Encoder():
 
     def finalize(self) -> str:
         self._is_finished = True
-        return self._string + self._render_quantum(self._byte_buffer)
+        encoding: str = self._string + self._render_quantum(self._byte_buffer)
+        if self._do_checksum:
+            encoding += self._alphabet.get(self._checksum)
+        return encoding
