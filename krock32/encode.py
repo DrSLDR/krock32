@@ -9,6 +9,7 @@ z-base-32 string.
 
 from collections import namedtuple
 
+
 class EncoderAlreadyFinalizedException(Exception):
     pass
 

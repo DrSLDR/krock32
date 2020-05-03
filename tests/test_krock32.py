@@ -12,7 +12,9 @@ import sys
 
 sys.path[0] = os.path.dirname(sys.path[0])
 
+# pylama:ignore=E402
 import krock32 as K
+
 
 class TestEncoder:
     def test_instatiates(self):
