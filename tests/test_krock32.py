@@ -1,7 +1,7 @@
 # test_zim.py
 
 """
-Testsuite for Zim
+Testsuite for Krock32
 """
 
 from hypothesis import given
@@ -12,14 +12,14 @@ import sys
 
 sys.path[0] = os.path.dirname(sys.path[0])
 
-import zim as Z
+import krock32 as K
 
 class TestEncoder:
     def test_instatiates(self):
-        assert isinstance(Z.Encoder(), Z.Encoder)
+        assert isinstance(K.Encoder(), K.Encoder)
 
     def test_alphabet(self):
-        ec = Z.Encoder()
+        ec = K.Encoder()
         alphabet = {
             0: 'y',
             1: 'b',
@@ -83,18 +83,18 @@ class TestEncoder:
 
     def test_simple_encodings(self):
         for bts, encoding in self._get_encoding_set():
-            ec = Z.Encoder()
+            ec = K.Encoder()
             ec.update(bts)
             assert ec.finalize() == encoding
 
     def test_update_after_final(self):
-        ec = Z.Encoder()
+        ec = K.Encoder()
         ec.update([0])
         ec.finalize()
-        with pytest.raises(Z.EncoderAlreadyFinalizedException):
+        with pytest.raises(K.EncoderAlreadyFinalizedException):
             ec.update([0])
 
 
 class TestDecoder:
     def test_instatiates(self):
-        assert isinstance(Z.Decoder(), Z.Decoder)
+        assert isinstance(K.Decoder(), K.Decoder)
