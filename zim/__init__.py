@@ -9,3 +9,4 @@ and pretty printing
 
 # pylama:ignore=W0611
 from zim.encode import Encoder, EncoderAlreadyFinalizedException
+from zim.decode import Decoder

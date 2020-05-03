@@ -93,3 +93,8 @@ class TestEncoder:
         ec.finalize()
         with pytest.raises(Z.EncoderAlreadyFinalizedException):
             ec.update([0])
+
+
+class TestDecoder:
+    def test_instatiates(self):
+        assert isinstance(Z.Decoder(), Z.Decoder)
