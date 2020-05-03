@@ -18,7 +18,7 @@ class Encoder():
         self._string: str = ''
         self._byte_buffer: bytearray = bytearray()
         self._alphabet: dict = self._make_alphabet(
-            'ybndrfg8ejkmcpqxot1uwisza345h769'
+            '0123456789ABCDEFGHJKMNPQRSTVWXYZ*~$=U'
         )
         self._is_finished: bool = False
         self._p_quin = namedtuple('ProcessedQuin', ['sym', 'rem'])
