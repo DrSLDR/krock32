@@ -104,6 +104,12 @@ class TestEncoder:
             assert ret[:-1] == encoding
             assert ret[-1] == cs
 
+    @given(b=st.binary())
+    def test_any_simple_encode(self, b):
+        ec = K.Encoder()
+        ec.update(b)
+        assert ec.finalize() is not None
+
     def test_update_after_final(self):
         ec = K.Encoder()
         ec.update([0])
