@@ -14,6 +14,10 @@ class DecoderAlreadyFinalizedException(Exception):
     pass
 
 
+class DecoderInvalidStringLengthException(Exception):
+    pass
+
+
 class Decoder:
     def __init__(self, strict=False, ignore_non_alphabet=True):
         self._string_buffer: str = ''
@@ -43,6 +47,8 @@ class Decoder:
         return self._p_sym(byte=self._alphabet.get(symbol), rem=0)
 
     def _decode_quantum(self, quantum: str) -> bytearray:
+        if not len(quantum) in [2, 4, 5, 7, 8]:
+            raise DecoderInvalidStringLengthException
         buffer = bytearray()
         p_sym = self._decode_first_symbol(quantum[0])
         if len(quantum) == 1:
