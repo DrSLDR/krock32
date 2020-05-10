@@ -18,6 +18,10 @@ class DecoderInvalidStringLengthException(Exception):
     pass
 
 
+class DecoderNonZeroCarryException(Exception):
+    pass
+
+
 class Decoder:
     def __init__(self, strict=False, ignore_non_alphabet=True):
         self._string_buffer: str = ''
@@ -60,9 +64,7 @@ class Decoder:
             if p_byte.carry == 0:
                 return buffer
             else:
-                # Handle illegal bytes; carry must be zero for this string
-                # to make sense
-                pass
+                raise DecoderNonZeroCarryException
 
     def _consume(self):
         while len(self._string_buffer) > 8:
