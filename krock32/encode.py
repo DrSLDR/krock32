@@ -121,7 +121,8 @@ class Encoder():
         if self._is_finished:
             raise EncoderAlreadyFinalizedException
         self._is_finished = True
-        encoding: str = self._string + self._render_quantum(self._byte_buffer)
+        encoding: str = self._string + (self._render_quantum(self._byte_buffer)
+                                        if len(self._byte_buffer) > 0 else '')
         if self._do_checksum:
             encoding += self._alphabet.get(self._checksum)
         return encoding
