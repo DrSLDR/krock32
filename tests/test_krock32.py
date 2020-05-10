@@ -211,6 +211,12 @@ class TestDecoder:
         }
         assert ec._alphabet == alphabet
 
+    def test_simple_encodings(self):
+        pass
+
+    def test_checksum_encodings(self):
+        pass
+
     def test_update_after_final(self):
         ec = K.Decoder()
         ec.update('')
