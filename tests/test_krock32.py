@@ -18,6 +18,7 @@ import krock32 as K
 
 def _get_encoding_set():
     return [
+        ([], '', '0'),
         ([0x27], '4W', '2'),
         ([0xb7], 'PW', '='),
         ([0xc6], 'RR', 'D'),
