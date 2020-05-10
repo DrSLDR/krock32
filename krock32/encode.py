@@ -1,10 +1,10 @@
 # encode.py
 
 """
-Zim encoder
+Krock32 encoder
 
-Class definition for the zim encoder, taking bytes-data and turning it into
-z-base-32 string.
+Class definition for the krock32 encoder, taking bytes-data and turning it
+into Crockford's Base32 string.
 """
 
 from collections import namedtuple

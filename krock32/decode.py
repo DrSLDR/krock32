@@ -1,10 +1,10 @@
 # decode.py
 
 """
-Zim Decoder
+Krock32 Decoder
 
-Class definition for the zim decoder, taking a z-base-32 string and turning it
-into bytes-data.
+Class definition for the Krock32 decoder, taking a Crockford Base32 string
+and turning it into bytes-data.
 """
 
 class Decoder:
