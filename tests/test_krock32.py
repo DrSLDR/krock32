@@ -16,6 +16,32 @@ sys.path[0] = os.path.dirname(sys.path[0])
 import krock32 as K
 
 
+def _get_encoding_set():
+    return [
+        ([0x27], '4W', '2'),
+        ([0xb7], 'PW', '='),
+        ([0xc6], 'RR', 'D'),
+        ([0xfe], 'ZR', '*'),
+        ([0x7e], 'FR', 'F'),
+        ([0x46], '8R', '~'),
+        ([0x27, 0xb7], '4YVG', 'X'),
+        ([0xb7, 0xc6], 'PZ30', 'K'),
+        ([0xc6, 0xfe], 'RVZ0', 'Y'),
+        ([0xfe, 0x7e], 'ZSZ0', 'Y'),
+        ([0x7e, 0x46], 'FS30', 'S'),
+        ([0x27, 0xb7, 0xc6], '4YVWC', '0'),
+        ([0xb7, 0xc6, 0xfe], 'PZ3FW', 'C'),
+        ([0xc6, 0xfe, 0x7e], 'RVZ7W', 'U'),
+        ([0xfe, 0x7e, 0x46], 'ZSZ4C', 'H'),
+        ([0x27, 0xb7, 0xc6, 0xfe], '4YVWDZG', '*'),
+        ([0xb7, 0xc6, 0xfe, 0x7e], 'PZ3FWZG', 'G'),
+        ([0xc6, 0xfe, 0x7e, 0x46], 'RVZ7WHG', 'U'),
+        ([0x27, 0xb7, 0xc6, 0xfe, 0x7e], '4YVWDZKY', 'Y'),
+        ([0xb7, 0xc6, 0xfe, 0x7e, 0x46], 'PZ3FWZJ6', 'P'),
+        ([0x27, 0xb7, 0xc6, 0xfe, 0x7e, 0x46], '4YVWDZKY8R', 'H')
+    ]
+
+
 class TestEncoder:
     def test_instatiates(self):
         assert isinstance(K.Encoder(), K.Encoder)
@@ -64,39 +90,14 @@ class TestEncoder:
         }
         assert ec._alphabet == alphabet
 
-    def _get_encoding_set(self):
-        return [
-            ([0x27], '4W', '2'),
-            ([0xb7], 'PW', '='),
-            ([0xc6], 'RR', 'D'),
-            ([0xfe], 'ZR', '*'),
-            ([0x7e], 'FR', 'F'),
-            ([0x46], '8R', '~'),
-            ([0x27, 0xb7], '4YVG', 'X'),
-            ([0xb7, 0xc6], 'PZ30', 'K'),
-            ([0xc6, 0xfe], 'RVZ0', 'Y'),
-            ([0xfe, 0x7e], 'ZSZ0', 'Y'),
-            ([0x7e, 0x46], 'FS30', 'S'),
-            ([0x27, 0xb7, 0xc6], '4YVWC', '0'),
-            ([0xb7, 0xc6, 0xfe], 'PZ3FW', 'C'),
-            ([0xc6, 0xfe, 0x7e], 'RVZ7W', 'U'),
-            ([0xfe, 0x7e, 0x46], 'ZSZ4C', 'H'),
-            ([0x27, 0xb7, 0xc6, 0xfe], '4YVWDZG', '*'),
-            ([0xb7, 0xc6, 0xfe, 0x7e], 'PZ3FWZG', 'G'),
-            ([0xc6, 0xfe, 0x7e, 0x46], 'RVZ7WHG', 'U'),
-            ([0x27, 0xb7, 0xc6, 0xfe, 0x7e], '4YVWDZKY', 'Y'),
-            ([0xb7, 0xc6, 0xfe, 0x7e, 0x46], 'PZ3FWZJ6', 'P'),
-            ([0x27, 0xb7, 0xc6, 0xfe, 0x7e, 0x46], '4YVWDZKY8R', 'H')
-        ]
-
     def test_simple_encodings(self):
-        for bts, encoding, _ in self._get_encoding_set():
+        for bts, encoding, _ in _get_encoding_set():
             ec = K.Encoder()
             ec.update(bts)
             assert ec.finalize() == encoding
 
     def test_checksum_encodings(self):
-        for bts, encoding, cs in self._get_encoding_set():
+        for bts, encoding, cs in _get_encoding_set():
             ec = K.Encoder(checksum=True)
             ec.update(bts)
             ret = ec.finalize()
