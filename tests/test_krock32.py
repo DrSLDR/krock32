@@ -117,6 +117,15 @@ class TestEncoder:
             ec.update(b)
         assert ec.finalize() is not None
 
+    @given(b=st.binary())
+    def test_any_simple_encode_with_checksum(self, b):
+        ec = K.Encoder(checksum=True)
+        ec.update(b)
+        cs = sum(b) % 37
+        v = ec.finalize()
+        assert v is not None
+        assert v[-1] == ec._alphabet.get(cs)
+
     def test_update_after_final(self):
         ec = K.Encoder()
         ec.update([0])
