@@ -64,7 +64,7 @@ class Decoder:
         if self._is_finished:
             raise DecoderAlreadyFinalizedException
         self._is_finished = True
-        decoding: bytearray = self._bytearray.append(
-                                (self._decode_quantum(self._string_buffer)
-                                 if len(self._string_buffer) > 0 else b''))
-        return bytes(decoding)
+        self._bytearray.extend(
+            self._decode_quantum(self._string_buffer)
+            if len(self._string_buffer) > 0 else [])
+        return bytes(self._bytearray)
