@@ -130,6 +130,20 @@ class TestEncoder:
         assert v is not None
         assert v[-1] == ec._alphabet.get(cs)
 
+    @given(bs=st.lists(st.binary()))
+    def test_any_complex_encode_with_checksum(self, bs):
+        ec = K.Encoder(checksum=True)
+        cs = 0
+        for b in bs:
+            ec.update(b)
+            for byte in b:
+                cs = cs << 8
+                cs += byte
+        cs = cs % 37
+        v = ec.finalize()
+        assert v is not None
+        assert v[-1] == ec._alphabet.get(cs)
+
     def test_update_after_final(self):
         ec = K.Encoder()
         ec.update([0])
