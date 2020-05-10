@@ -253,10 +253,10 @@ class TestDecoder:
         assert ec._alphabet == alphabet
 
     def test_simple_decodings(self):
-        dc = K.Decoder()
         for bts, encoding, _ in _get_encoding_set():
+            dc = K.Decoder()
             dc.update(encoding)
-        assert dc.finalize() == bytes(bts)
+            assert dc.finalize() == bytes(bts)
 
     def test_checksum_encodings(self):
         pass
