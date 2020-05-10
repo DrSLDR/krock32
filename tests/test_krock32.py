@@ -210,3 +210,17 @@ class TestDecoder:
             'U': 36
         }
         assert ec._alphabet == alphabet
+
+    def test_update_after_final(self):
+        ec = K.Decoder()
+        ec.update('')
+        ec.finalize()
+        with pytest.raises(K.decode.DecoderAlreadyFinalizedException):
+            ec.update('')
+
+    def test_multiple_final(self):
+        ec = K.Decoder()
+        ec.update('')
+        ec.finalize()
+        with pytest.raises(K.decode.DecoderAlreadyFinalizedException):
+            ec.finalize()
