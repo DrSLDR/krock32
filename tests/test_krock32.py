@@ -110,6 +110,13 @@ class TestEncoder:
         ec.update(b)
         assert ec.finalize() is not None
 
+    @given(bs=st.lists(st.binary()))
+    def test_any_complex_encode(self, bs):
+        ec = K.Encoder()
+        for b in bs:
+            ec.update(b)
+        assert ec.finalize() is not None
+
     def test_update_after_final(self):
         ec = K.Encoder()
         ec.update([0])
