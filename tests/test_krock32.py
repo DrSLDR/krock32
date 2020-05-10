@@ -121,7 +121,11 @@ class TestEncoder:
     def test_any_simple_encode_with_checksum(self, b):
         ec = K.Encoder(checksum=True)
         ec.update(b)
-        cs = sum(b) % 37
+        cs = 0
+        for byte in b:
+            cs = cs << 8
+            cs += byte
+        cs = cs % 37
         v = ec.finalize()
         assert v is not None
         assert v[-1] == ec._alphabet.get(cs)
