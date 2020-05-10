@@ -8,6 +8,10 @@ and turning it into bytes-data.
 """
 
 
+class DecoderAlreadyFinalizedException(Exception):
+    pass
+
+
 class Decoder:
     def __init__(self, strict=False, ignore_non_alphabet=True):
         self._string_buffer: str = ''
@@ -18,6 +22,7 @@ class Decoder:
             '0123456789ABCDEFGHJKMNPQRSTVWXYZ*~$=U',
             strict=self._strict
         )
+        self._is_finished = False
 
     def _make_alphabet(self, alphabet_string: str, strict: bool) -> dict:
         alphabet = {}
@@ -30,3 +35,12 @@ class Decoder:
             (alphabet['I'], alphabet['i'],
              alphabet['L'], alphabet['l']) = 1, 1, 1, 1
         return alphabet
+
+    def update(self, string: str):
+        if self._is_finished:
+            raise DecoderAlreadyFinalizedException
+
+    def finalize(self) -> bytes:
+        if self._is_finished:
+            raise DecoderAlreadyFinalizedException
+        self._is_finished = True
