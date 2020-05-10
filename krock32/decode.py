@@ -29,7 +29,7 @@ class Decoder:
             strict=self._strict
         )
         self._is_finished = False
-        self._p_sym = namedtuple('ProcessedSymbol', ['byte', 'rem'])
+        self._p_byte = namedtuple('ProcessedByte', ['byte', 'carry'])
 
     def _make_alphabet(self, alphabet_string: str, strict: bool) -> dict:
         alphabet = {}
@@ -43,16 +43,26 @@ class Decoder:
              alphabet['L'], alphabet['l']) = 1, 1, 1, 1
         return alphabet
 
-    def _decode_first_symbol(self, symbol: str) -> bytes:
-        return self._p_sym(byte=self._alphabet.get(symbol), rem=0)
+    def _decode_first_byte(self, symbols: str) -> tuple:
+        byte = self._alphabet.get(symbols[0]) << 3
+        second_sym = self._alphabet.get(symbols[1])
+        byte += second_sym >> 2
+        carry = second_sym & 0b11
+        return self._p_byte(byte=byte, carry=carry)
 
     def _decode_quantum(self, quantum: str) -> bytearray:
         if not len(quantum) in [2, 4, 5, 7, 8]:
             raise DecoderInvalidStringLengthException
         buffer = bytearray()
-        p_sym = self._decode_first_symbol(quantum[0])
-        if len(quantum) == 1:
-            return buffer.append(p_sym.byte << 3)
+        p_byte = self._decode_first_byte(quantum[0:2])
+        buffer.append(p_byte.byte)
+        if len(quantum) == 2:
+            if p_byte.carry == 0:
+                return buffer
+            else:
+                # Handle illegal bytes; carry must be zero for this string
+                # to make sense
+                pass
 
     def _consume(self):
         while len(self._string_buffer) > 8:
