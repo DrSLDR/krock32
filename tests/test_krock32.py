@@ -265,7 +265,7 @@ class TestDecoder:
                 continue
             for fuzz in range(32):
                 if fuzz & (pow(2, [
-                        0, 0, 2, 0, 4, 1, 0, 3][len(encoding)]) - 1) == 0:
+                        0, 0, 2, 0, 4, 1, 0, 3][len(encoding) % 8]) - 1) == 0:
                     continue
                 fuzzc = ec._alphabet.get(fuzz)
                 encoding = encoding[:-1] + fuzzc
