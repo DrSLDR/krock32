@@ -54,6 +54,15 @@ class Decoder:
         carry = second_sym & 0b11
         return self._p_byte(byte=byte, carry=carry)
 
+    def _return_quantum(self, quantum: str, p_byte: tuple,
+                        array: bytearray) -> bytearray:
+        if p_byte.carry == 0:
+            return array
+        else:
+            raise DecoderNonZeroCarryException(
+                'Quantum %s decoded with non-zero carry %i' %
+                (quantum, p_byte.carry))
+
     def _decode_quantum(self, quantum: str) -> bytearray:
         if not len(quantum) in [2, 4, 5, 7, 8]:
             raise DecoderInvalidStringLengthException
@@ -61,10 +70,7 @@ class Decoder:
         p_byte = self._decode_first_byte(quantum[0:2])
         buffer.append(p_byte.byte)
         if len(quantum) == 2:
-            if p_byte.carry == 0:
-                return buffer
-            else:
-                raise DecoderNonZeroCarryException
+            return self._return_quantum(quantum, p_byte, buffer)
 
     def _consume(self):
         while len(self._string_buffer) > 8:
