@@ -263,9 +263,9 @@ class TestDecoder:
         for bts, encoding, _ in _get_encoding_set():
             if len(encoding) == 8:
                 continue
-            for fuzz in range(37):
+            for fuzz in range(32):
                 if fuzz & (pow(2, [
-                        0, 0, 3, 0, 4, 7, 0, 5][len(encoding)]) - 1) == 0:
+                        0, 0, 2, 0, 4, 1, 0, 3][len(encoding)]) - 1) == 0:
                     continue
                 fuzzc = ec._alphabet.get(fuzz)
                 encoding = encoding[:-1] + fuzzc
