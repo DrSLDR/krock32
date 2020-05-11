@@ -67,6 +67,17 @@ class Decoder:
         carry = sym & 1
         return self._p_byte(byte=byte, carry=carry)
 
+    def _decode_fourth_byte(self, symbols: str, carry: int) -> tuple:
+        byte = (self._alphabet.get(symbols[0]) << 2) + (carry << 7)
+        second_sym = self._alphabet.get(symbols[1])
+        byte += second_sym >> 3
+        carry = second_sym & 0b111
+        return self._p_byte(byte=byte, carry=carry)
+
+    def _decode_fifth_byte(self, symbols: str, carry: int) -> tuple:
+        byte = (carry << 5) + self._alphabet.get(symbols)
+        return self._p_byte(byte=byte, carry=0)
+
     def _return_quantum(self, quantum: str, p_byte: tuple,
                         array: bytearray) -> bytearray:
         if p_byte.carry == 0:
@@ -92,6 +103,13 @@ class Decoder:
         buffer.append(p_byte.byte)
         if len(quantum) == 5:
             return self._return_quantum(quantum, p_byte, buffer)
+        p_byte = self._decode_fourth_byte(quantum[5:7], p_byte.carry)
+        buffer.append(p_byte.byte)
+        if len(quantum) == 7:
+            return self._return_quantum(quantum, p_byte, buffer)
+        p_byte = self._decode_fifth_byte(quantum[7], p_byte.carry)
+        buffer.append(p_byte.byte)
+        return buffer
 
     def _consume(self):
         while len(self._string_buffer) > 8:
