@@ -258,6 +258,22 @@ class TestDecoder:
             dc.update(encoding)
             assert dc.finalize() == bytes(bts)
 
+    def test_simple_decodings_bit_offset(self):
+        ec = K.Encoder()
+        for bts, encoding, _ in _get_encoding_set():
+            if len(encoding) == 8:
+                continue
+            for fuzz in range(37):
+                if fuzz & (pow(2, [
+                        0, 0, 3, 0, 4, 7, 0, 5][len(encoding)]) - 1) == 0:
+                    continue
+                fuzzc = ec._alphabet.get(fuzz)
+                encoding = encoding[:-1] + fuzzc
+                dc = K.Decoder()
+                dc.update(encoding)
+                with pytest.raises(K.decode.DecoderNonZeroCarryException):
+                    dc.finalize()
+
     def test_checksum_encodings(self):
         pass
 
