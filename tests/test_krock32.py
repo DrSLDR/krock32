@@ -258,7 +258,7 @@ class TestDecoder:
             dc.update(encoding)
             assert dc.finalize() == bytes(bts)
 
-    def test_simple_decodings_bit_offset(self):
+    def test_simple_decodings_fuzzed(self):
         ec = K.Encoder()
         for bts, encoding, _ in _get_encoding_set():
             if len(encoding) == 8:
