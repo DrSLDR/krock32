@@ -55,11 +55,17 @@ class Decoder:
              alphabet['L'], alphabet['l']) = 1, 1, 1, 1
         return alphabet
 
+    def _update_checksum(self, byte: int):
+        if not self._do_checksum:
+            return
+        self._checksum = ((self._checksum << 8) + byte) % 37
+
     def _decode_first_byte(self, symbols: str) -> tuple:
         byte = self._alphabet.get(symbols[0]) << 3
         second_sym = self._alphabet.get(symbols[1])
         byte += second_sym >> 2
         carry = second_sym & 0b11
+        self._update_checksum(byte)
         return self._p_byte(byte=byte, carry=carry)
 
     def _decode_second_byte(self, symbols: str, carry: int) -> tuple:
@@ -67,12 +73,14 @@ class Decoder:
         second_sym = self._alphabet.get(symbols[1])
         byte += second_sym >> 4
         carry = second_sym & 0b1111
+        self._update_checksum(byte)
         return self._p_byte(byte=byte, carry=carry)
 
     def _decode_third_byte(self, symbols: str, carry: int) -> tuple:
         sym = self._alphabet.get(symbols)
         byte = (sym >> 1) + (carry << 4)
         carry = sym & 1
+        self._update_checksum(byte)
         return self._p_byte(byte=byte, carry=carry)
 
     def _decode_fourth_byte(self, symbols: str, carry: int) -> tuple:
@@ -80,10 +88,12 @@ class Decoder:
         second_sym = self._alphabet.get(symbols[1])
         byte += second_sym >> 3
         carry = second_sym & 0b111
+        self._update_checksum(byte)
         return self._p_byte(byte=byte, carry=carry)
 
     def _decode_fifth_byte(self, symbols: str, carry: int) -> tuple:
         byte = (carry << 5) + self._alphabet.get(symbols)
+        self._update_checksum(byte)
         return self._p_byte(byte=byte, carry=0)
 
     def _return_quantum(self, quantum: str, p_byte: tuple,
