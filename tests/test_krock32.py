@@ -275,7 +275,11 @@ class TestDecoder:
                     dc.finalize()
 
     def test_checksum_encodings(self):
-        pass
+        for bts, encoding, cs in _get_encoding_set():
+            dc = K.Decoder(checksum=True)
+            dc.update(encoding)
+            dc.update(cs)
+            assert dc.finalize() == bytes(bts)
 
     def test_update_after_final(self):
         ec = K.Decoder()
