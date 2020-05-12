@@ -43,6 +43,15 @@ def _get_encoding_set():
     ]
 
 
+def _get_encoded_text_strategy(length=8, strict=True):
+    if strict:
+        alphabet = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
+    else:
+        alphabet = ('0123456789ABCDEFGHJKMNPQRSTVWXYZ'
+                    'abcdefghjkmnpqrstvwxyzOoIiLl')
+    return st.text(alphabet=alphabet, min_size=length, max_size=length)
+
+
 class TestEncoder:
     def test_instatiates(self):
         assert isinstance(K.Encoder(), K.Encoder)
@@ -324,3 +333,20 @@ class TestEncodeAndDecode:
         ec.update(b)
         dc.update(ec.finalize())
         assert b == dc.finalize()
+
+    @given(t=_get_encoded_text_strategy())
+    def test_decode_encode_decode_equal(self, t):
+        ec = K.Encoder()
+        dc = K.Decoder()
+        dc.update(t)
+        ec.update(dc.finalize())
+        assert t == ec.finalize()
+
+    @given(ts=st.lists(_get_encoded_text_strategy()))
+    def test_long_decode_encode_decode_equal(self, ts):
+        ec = K.Encoder()
+        dc = K.Decoder()
+        for t in ts:
+            dc.update(t)
+        ec.update(dc.finalize())
+        assert ''.join(ts) == ec.finalize()
