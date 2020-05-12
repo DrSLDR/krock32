@@ -306,3 +306,21 @@ class TestDecoder:
         ec.finalize()
         with pytest.raises(K.decode.DecoderAlreadyFinalizedException):
             ec.finalize()
+
+
+class TestEncodeAndDecode:
+    @given(b=st.binary())
+    def test_encode_decode_encode_equal(self, b):
+        ec = K.Encoder()
+        dc = K.Decoder()
+        ec.update(b)
+        dc.update(ec.finalize())
+        assert b == dc.finalize()
+
+    @given(b=st.binary())
+    def test_encode_decode_encode_with_checksum_equal(self, b):
+        ec = K.Encoder(checksum=True)
+        dc = K.Decoder(checksum=True)
+        ec.update(b)
+        dc.update(ec.finalize())
+        assert b == dc.finalize()
