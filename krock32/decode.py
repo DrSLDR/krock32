@@ -131,14 +131,26 @@ class Decoder:
         self._string_buffer += string
         self._consume()
 
+    def _check_checksum(self, checksymbol: str) -> bytes:
+        expected = self._alphabet.get(checksymbol)
+        if self._checksum == expected:
+            return bytes(self._bytearray)
+        else:
+            raise DecoderChecksumException(
+                'Calculated checksum %i, expected %i' %
+                (self._checksum, expected))
+
     def finalize(self) -> bytes:
         if self._is_finished:
             raise DecoderAlreadyFinalizedException
         self._is_finished = True
         if self._do_checksum:
-            checksum = self._string_buffer[-1]
+            checksymbol = self._string_buffer[-1]
             self._string_buffer = self._string_buffer[:-1]
         self._bytearray.extend(
             self._decode_quantum(self._string_buffer)
             if len(self._string_buffer) > 0 else [])
-        return bytes(self._bytearray)
+        if self._do_checksum:
+            return self._check_checksum(checksymbol)
+        else:
+            return bytes(self._bytearray)
