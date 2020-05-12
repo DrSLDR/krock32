@@ -92,7 +92,7 @@ def _get_encoded_complex_text_strategy(draw, strict=True):
 
 
 class TestEncoder:
-    def test_instatiates(self):
+    def test_instantiates(self):
         assert isinstance(K.Encoder(), K.Encoder)
 
     def test_alphabet(self):
@@ -209,7 +209,7 @@ class TestEncoder:
 
 
 class TestDecoder:
-    def test_instatiates(self):
+    def test_instantiates(self):
         assert isinstance(K.Decoder(), K.Decoder)
 
     def test_alphabet_permissive(self):
