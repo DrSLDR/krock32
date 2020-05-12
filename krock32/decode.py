@@ -23,7 +23,9 @@ class DecoderNonZeroCarryException(Exception):
 
 
 class Decoder:
-    def __init__(self, strict=False, ignore_non_alphabet=True):
+    def __init__(self, strict: bool = False,
+                 ignore_non_alphabet: bool = True,
+                 checksum: bool = False):
         self._string_buffer: str = ''
         self._bytearray: bytearray = bytearray()
         self._strict: bool = strict
@@ -32,8 +34,9 @@ class Decoder:
             '0123456789ABCDEFGHJKMNPQRSTVWXYZ*~$=U',
             strict=self._strict
         )
-        self._is_finished = False
+        self._is_finished: bool = False
         self._p_byte = namedtuple('ProcessedByte', ['byte', 'carry'])
+        self._do_checksum: bool = checksum
 
     def _make_alphabet(self, alphabet_string: str, strict: bool) -> dict:
         alphabet = {}
