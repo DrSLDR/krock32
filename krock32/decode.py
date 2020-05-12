@@ -22,6 +22,10 @@ class DecoderNonZeroCarryException(Exception):
     pass
 
 
+class DecoderChecksumException(Exception):
+    pass
+
+
 class Decoder:
     def __init__(self, strict: bool = False,
                  ignore_non_alphabet: bool = True,

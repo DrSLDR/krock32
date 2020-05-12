@@ -274,12 +274,24 @@ class TestDecoder:
                 with pytest.raises(K.decode.DecoderNonZeroCarryException):
                     dc.finalize()
 
-    def test_checksum_encodings(self):
+    def test_checksum_decodings(self):
         for bts, encoding, cs in _get_encoding_set():
             dc = K.Decoder(checksum=True)
             dc.update(encoding)
             dc.update(cs)
             assert dc.finalize() == bytes(bts)
+
+    def test_bad_checksum_decodings(self):
+        ec = K.Encoder()
+        for bts, encoding, cs in _get_encoding_set():
+            for bcs in ec._alphabet.values():
+                if bcs == cs:
+                    continue
+                dc = K.Decoder(checksum=True)
+                dc.update(encoding)
+                dc.update(bcs)
+                with pytest.raises(K.decode.DecoderChecksumException):
+                    dc.finalize()
 
     def test_update_after_final(self):
         ec = K.Decoder()
