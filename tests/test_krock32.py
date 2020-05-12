@@ -302,6 +302,18 @@ class TestDecoder:
                 with pytest.raises(K.decode.DecoderChecksumException):
                     dc.finalize()
 
+    @given(t=_get_encoded_text_strategy())
+    def test_any_simple_strict_decode(self, t):
+        dc = K.Decoder()
+        dc.update(t)
+        assert dc.finalize() is not None
+
+    @given(t=_get_encoded_text_strategy(strict=False))
+    def test_any_simple_decode(self, t):
+        dc = K.Decoder()
+        dc.update(t)
+        assert dc.finalize() is not None
+
     def test_update_after_final(self):
         ec = K.Decoder()
         ec.update('')
