@@ -37,6 +37,7 @@ class Decoder:
         self._is_finished: bool = False
         self._p_byte = namedtuple('ProcessedByte', ['byte', 'carry'])
         self._do_checksum: bool = checksum
+        self._checksum: int = 0
 
     def _make_alphabet(self, alphabet_string: str, strict: bool) -> dict:
         alphabet = {}
@@ -130,6 +131,9 @@ class Decoder:
         if self._is_finished:
             raise DecoderAlreadyFinalizedException
         self._is_finished = True
+        if self._do_checksum:
+            checksum = self._string_buffer[-1]
+            self._string_buffer = self._string_buffer[:-1]
         self._bytearray.extend(
             self._decode_quantum(self._string_buffer)
             if len(self._string_buffer) > 0 else [])
