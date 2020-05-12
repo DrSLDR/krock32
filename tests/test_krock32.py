@@ -52,6 +52,34 @@ def _get_encoded_text_strategy(length=8, strict=True):
     return st.text(alphabet=alphabet, min_size=length, max_size=length)
 
 
+@st.composite
+def _get_encoded_stub_text_strategy(draw, length, strict=True):
+    setA = set('0G')
+    setB = set('8R')
+    setC = set('4CMW')
+    setD = set('26AEJPTY')
+    if not strict:
+        setA |= set('Oog')
+        setB |= set('r')
+        setC |= set('cmw')
+        setD |= set('aejpty')
+    if length == 2:
+        b = draw(_get_encoded_text_strategy(length=1, strict=strict))
+        s = draw(st.text(alphabet=(setA | setB | setC), min_size=1,
+                 max_size=1))
+    elif length == 4:
+        b = draw(_get_encoded_text_strategy(length=3, strict=strict))
+        s = draw(st.text(alphabet=(setA), min_size=1, max_size=1))
+    elif length == 5:
+        b = draw(_get_encoded_text_strategy(length=4, strict=strict))
+        s = draw(st.text(alphabet=(setA | setB | setC | setD), min_size=1,
+                 max_size=1))
+    elif length == 7:
+        b = draw(_get_encoded_text_strategy(length=6, strict=strict))
+        s = draw(st.text(alphabet=(setA | setB), min_size=1, max_size=1))
+    return ''.join([b, s])
+
+
 class TestEncoder:
     def test_instatiates(self):
         assert isinstance(K.Encoder(), K.Encoder)
