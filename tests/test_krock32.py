@@ -77,7 +77,18 @@ def _get_encoded_stub_text_strategy(draw, length, strict=True):
     elif length == 7:
         b = draw(_get_encoded_text_strategy(length=6, strict=strict))
         s = draw(st.text(alphabet=(setA | setB), min_size=1, max_size=1))
+    else:
+        return ''
     return ''.join([b, s])
+
+
+@st.composite
+def _get_encoded_complex_text_strategy(draw, strict=True):
+    base = draw(st.lists(_get_encoded_text_strategy(strict=strict)))
+    stub_length = draw(st.integers(min_value=2, max_value=7))
+    stub = draw(_get_encoded_stub_text_strategy(length=stub_length,
+                                                strict=strict))
+    return ''.join([''.join(base), stub])
 
 
 class TestEncoder:
@@ -330,13 +341,13 @@ class TestDecoder:
                 with pytest.raises(K.decode.DecoderChecksumException):
                     dc.finalize()
 
-    @given(t=_get_encoded_text_strategy())
+    @given(t=_get_encoded_complex_text_strategy())
     def test_any_simple_strict_decode(self, t):
         dc = K.Decoder()
         dc.update(t)
         assert dc.finalize() is not None
 
-    @given(t=_get_encoded_text_strategy(strict=False))
+    @given(t=_get_encoded_complex_text_strategy(strict=False))
     def test_any_simple_decode(self, t):
         dc = K.Decoder()
         dc.update(t)
@@ -374,7 +385,7 @@ class TestEncodeAndDecode:
         dc.update(ec.finalize())
         assert b == dc.finalize()
 
-    @given(t=_get_encoded_text_strategy())
+    @given(t=_get_encoded_complex_text_strategy())
     def test_decode_encode_decode_equal(self, t):
         ec = K.Encoder()
         dc = K.Decoder()
