@@ -1,7 +1,7 @@
 # __init__.py
 
 """
-Krock32 module 0.0.1
+Krock32 module 0.1.0
 
 Implementation of Crockford's base32 alphabet encoding, decoding,
 and pretty printing

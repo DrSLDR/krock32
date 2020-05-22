@@ -7,7 +7,7 @@ README = (HERE / 'README.md').read_text()
 
 setup(
     name='krock32',
-    version='0.0.1',
+    version='0.1.0',
     description='Base32 encoder/decoder using Crockford\'s alphabet',
     long_description=README,
     long_description_content_type='text/markdown',
