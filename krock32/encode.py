@@ -104,10 +104,12 @@ class Encoder:
         return the_string + p_quin.sym
 
     def _consume(self):
-        while len(self._byte_buffer) > 5:
-            quantum = self._byte_buffer[0:5]
-            del self._byte_buffer[0:5]
+        tail = 0
+        for head in range(5, len(self._byte_buffer), 5):
+            quantum = self._byte_buffer[tail:head]
             self._string += self._encode_quantum(quantum)
+            tail = head
+        self._byte_buffer = self._byte_buffer[tail:]
 
     def update(self, data: bytes):
         if self._is_finished:
