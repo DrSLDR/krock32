@@ -27,19 +27,21 @@ class DecoderChecksumException(Exception):
 
 
 class Decoder:
-    def __init__(self, strict: bool = False,
-                 ignore_non_alphabet: bool = True,
-                 checksum: bool = False):
-        self._string_buffer: str = ''
+    def __init__(
+        self,
+        strict: bool = False,
+        ignore_non_alphabet: bool = True,
+        checksum: bool = False,
+    ):
+        self._string_buffer: str = ""
         self._bytearray: bytearray = bytearray()
         self._strict: bool = strict
         self._ignore_non_alphabet: bool = ignore_non_alphabet
         self._alphabet = self._make_alphabet(
-            '0123456789ABCDEFGHJKMNPQRSTVWXYZ*~$=U',
-            strict=self._strict
+            "0123456789ABCDEFGHJKMNPQRSTVWXYZ*~$=U", strict=self._strict
         )
         self._is_finished: bool = False
-        self._p_byte = namedtuple('ProcessedByte', ['byte', 'carry'])
+        self._p_byte = namedtuple("ProcessedByte", ["byte", "carry"])
         self._do_checksum: bool = checksum
         self._checksum: int = 0
 
@@ -50,9 +52,8 @@ class Decoder:
             if not strict:
                 alphabet[x.lower()] = i
         if not strict:
-            alphabet['O'], alphabet['o'] = 0, 0
-            (alphabet['I'], alphabet['i'],
-             alphabet['L'], alphabet['l']) = 1, 1, 1, 1
+            alphabet["O"], alphabet["o"] = 0, 0
+            (alphabet["I"], alphabet["i"], alphabet["L"], alphabet["l"]) = 1, 1, 1, 1
         return alphabet
 
     def _update_checksum(self, byte: int):
@@ -96,14 +97,15 @@ class Decoder:
         self._update_checksum(byte)
         return self._p_byte(byte=byte, carry=0)
 
-    def _return_quantum(self, quantum: str, p_byte: tuple,
-                        array: bytearray) -> bytearray:
+    def _return_quantum(
+        self, quantum: str, p_byte: tuple, array: bytearray
+    ) -> bytearray:
         if p_byte.carry == 0:
             return array
         else:
             raise DecoderNonZeroCarryException(
-                'Quantum %s decoded with non-zero carry %i' %
-                (quantum, p_byte.carry))
+                "Quantum %s decoded with non-zero carry %i" % (quantum, p_byte.carry)
+            )
 
     def _decode_quantum(self, quantum: str) -> bytearray:
         if not len(quantum) in [2, 4, 5, 7, 8]:
@@ -147,8 +149,8 @@ class Decoder:
             return bytes(self._bytearray)
         else:
             raise DecoderChecksumException(
-                'Calculated checksum %i, expected %i' %
-                (self._checksum, expected))
+                "Calculated checksum %i, expected %i" % (self._checksum, expected)
+            )
 
     def finalize(self) -> bytes:
         if self._is_finished:
@@ -159,7 +161,9 @@ class Decoder:
             self._string_buffer = self._string_buffer[:-1]
         self._bytearray.extend(
             self._decode_quantum(self._string_buffer)
-            if len(self._string_buffer) > 0 else [])
+            if len(self._string_buffer) > 0
+            else []
+        )
         if self._do_checksum:
             return self._check_checksum(checksymbol)
         else:
