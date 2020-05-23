@@ -1,7 +1,7 @@
 # __init__.py
 
 """
-Krock32 module 0.1.0
+Krock32 module 0.1.1
 
 Implementation of Crockford's base32 alphabet encoding, decoding,
 and pretty printing
@@ -11,4 +11,4 @@ and pretty printing
 from krock32.decode import Decoder
 from krock32.encode import Encoder
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
