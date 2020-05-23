@@ -8,6 +8,7 @@ into Crockford's Base32 string.
 """
 
 from collections import namedtuple
+from typing import List
 
 
 class EncoderAlreadyFinalizedException(Exception):
@@ -16,7 +17,7 @@ class EncoderAlreadyFinalizedException(Exception):
 
 class Encoder:
     def __init__(self, checksum: bool = False):
-        self._string: str = ""
+        self._string_list: List[str] = []
         self._byte_buffer: bytearray = bytearray()
         self._alphabet: dict = self._make_alphabet(
             "0123456789ABCDEFGHJKMNPQRSTVWXYZ*~$=U"
@@ -78,36 +79,37 @@ class Encoder:
         sym += self._alphabet.get(quin)
         return self._p_quin(sym=sym, rem=0)
 
-    def _encode_quantum(self, quantum: bytearray) -> str:
-        the_string = ""
+    def _encode_quantum(self, quantum: bytearray) -> List[str]:
+        slist: List[str] = []
         p_quin = self._encode_first_quin(quantum[0])
-        the_string += p_quin.sym
+        slist.append(p_quin.sym)
         if len(quantum) == 1:
-            the_string += self._alphabet.get(p_quin.rem)
-            return the_string
+            slist.append(self._alphabet.get(p_quin.rem))
+            return slist
         p_quin = self._encode_second_quin(quantum[1], p_quin.rem)
-        the_string += p_quin.sym
+        slist.append(p_quin.sym)
         if len(quantum) == 2:
-            the_string += self._alphabet.get(p_quin.rem)
-            return the_string
+            slist.append(self._alphabet.get(p_quin.rem))
+            return slist
         p_quin = self._encode_third_quin(quantum[2], p_quin.rem)
-        the_string += p_quin.sym
+        slist.append(p_quin.sym)
         if len(quantum) == 3:
-            the_string += self._alphabet.get(p_quin.rem)
-            return the_string
+            slist.append(self._alphabet.get(p_quin.rem))
+            return slist
         p_quin = self._encode_fourth_quin(quantum[3], p_quin.rem)
-        the_string += p_quin.sym
+        slist.append(p_quin.sym)
         if len(quantum) == 4:
-            the_string += self._alphabet.get(p_quin.rem)
-            return the_string
+            slist.append(self._alphabet.get(p_quin.rem))
+            return slist
         p_quin = self._encode_fifth_quin(quantum[4], p_quin.rem)
-        return the_string + p_quin.sym
+        slist.append(p_quin.sym)
+        return slist
 
     def _consume(self):
         tail = 0
         for head in range(5, len(self._byte_buffer), 5):
             quantum = self._byte_buffer[tail:head]
-            self._string += self._encode_quantum(quantum)
+            self._string_list.extend(self._encode_quantum(quantum))
             tail = head
         self._byte_buffer = self._byte_buffer[tail:]
 
@@ -121,11 +123,11 @@ class Encoder:
         if self._is_finished:
             raise EncoderAlreadyFinalizedException
         self._is_finished = True
-        encoding: str = self._string + (
+        self._string_list.extend(
             self._encode_quantum(self._byte_buffer)
             if len(self._byte_buffer) > 0
-            else ""
+            else []
         )
         if self._do_checksum:
-            encoding += self._alphabet.get(self._checksum)
-        return encoding
+            self._string_list.append(self._alphabet.get(self._checksum))
+        return "".join(self._string_list)
