@@ -111,6 +111,12 @@ krock32 implements Douglas Crockford's ([@douglascrockford](https://github.com/d
 
 ## Changelog
 
+- **0.1.1** Optimization patch. Ran the encoder and decoder through a profiler with 1MiB of random input (1.7MiB to the decoder; the encoded version of the encoder's input). I was well aware of both of them being inefficient and found most of it had to do with throwing around strings.
+
+  The results for my (admittedly short) tests:
+  - **Encoder**: 31,560s (~32,4 kiB/s) pre-optimization; 2,737s (~374 kiB/s) post-optimization. That's an order of magnitude faster.
+  - **Decoder**: 9,342s (~175,4 kiB/s) pre-optimization; 2,817s (~581,6 kiB/s) post-optimization. A little more than 3 times faster.
+
 - **0.1.0** Initial release.
 - **0.0.1** Development version. This project started out named `zim` and implemented [z-base-32](https://www.wikiwand.com/en/Base32#/z-base-32). This was later discarded when I learned that Crockford's alphabet does a better job with interchangeable symbols, which I explicitly wanted. Package changed its name to `krock32`.
 
