@@ -1,6 +1,6 @@
 # krock32
 
-_A base32 decoder/encoder using Crockford's alphabet, v0.1.0_
+_A base32 decoder/encoder using Crockford's alphabet_
 
 krock32 is a Python implementation of [Crockford's base32 alphabet](https://www.crockford.com/base32.html), including checksumming. It is created to allow encoding of arbitrary data to a human readable format, allowing for human-to-human transmission, while also being machine-decodable. All this without being case-sensitive or using special characters like base64 does.
 
@@ -112,7 +112,7 @@ krock32 implements Douglas Crockford's ([@douglascrockford](https://github.com/d
 ## Changelog
 
 - **0.1.0** Initial release.
-- **0.1.0** Development version. This project started out named `zim` and implemented [z-base-32](https://www.wikiwand.com/en/Base32#/z-base-32). This was later discarded when I learned that Crockford's alphabet does a better job with interchangeable symbols, which I explicitly wanted. Package changed its name to `krock32`.
+- **0.0.1** Development version. This project started out named `zim` and implemented [z-base-32](https://www.wikiwand.com/en/Base32#/z-base-32). This was later discarded when I learned that Crockford's alphabet does a better job with interchangeable symbols, which I explicitly wanted. Package changed its name to `krock32`.
 
 ## Is it any good?
 
