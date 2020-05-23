@@ -132,10 +132,12 @@ class Decoder:
         return buffer
 
     def _consume(self):
-        while len(self._string_buffer) > 8:
-            quantum: str = self._string_buffer[0:8]
-            self._string_buffer = self._string_buffer[8:]
+        tail = 0
+        for head in range(8, len(self._string_buffer), 8):
+            quantum: str = self._string_buffer[tail:head]
             self._bytearray.extend(self._decode_quantum(quantum))
+            tail = head
+        self._string_buffer = self._string_buffer[tail:]
 
     def update(self, string: str):
         if self._is_finished:
